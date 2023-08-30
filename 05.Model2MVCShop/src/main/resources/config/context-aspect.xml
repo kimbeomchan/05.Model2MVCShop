@@ -21,5 +21,7 @@
 					pointcut="execution(* com.model2.mvc.service..*Impl.*(..) )"	method="invoke"/>
 	 	</aop:aspect>
 	 </aop:config>
+	 
+	 <aop:aspectj-autoproxy/>
 
 </beans>

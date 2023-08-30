@@ -25,14 +25,7 @@ import com.model2.mvc.service.user.UserService;
  * ㅇ @Test : 테스트 실행 소스 지정
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-
-//==> Meta-Data 를 다양하게 Wiring 하자...
-//@ContextConfiguration(locations = { "classpath:config/context-*.xml" })
-@ContextConfiguration	(locations = {	"classpath:config/context-common.xml",
-																	"classpath:config/context-aspect.xml",
-																	"classpath:config/context-mybatis.xml",
-																	"classpath:config/context-transaction.xml" })
-//@ContextConfiguration(locations = { "classpath:config/context-common.xml" })
+@ContextConfiguration(locations = { "classpath:config/context-*.xml" })
 public class UserServiceTest {
 
 	//==>@RunWith,@ContextConfiguration 이용 Wiring, Test 할 instance DI
@@ -44,6 +37,7 @@ public class UserServiceTest {
 	public void testAddUser() throws Exception {
 		
 		User user = new User();
+		
 		user.setUserId("testUserId");
 		user.setUserName("testUserName");
 		user.setPassword("testPasswd");
@@ -68,18 +62,18 @@ public class UserServiceTest {
 		Assert.assertEquals("test@test.com", user.getEmail());
 	}
 	
-	//@Test
+	@Test
 	public void testGetUser() throws Exception {
 		
 		User user = new User();
 		//==> 필요하다면...
-//			user.setUserId("testUserId");
-//			user.setUserName("testUserName");
-//			user.setPassword("testPasswd");
-//			user.setSsn("1111112222222");
-//			user.setPhone("111-2222-3333");
-//			user.setAddr("경기도");
-//			user.setEmail("test@test.com");
+//		user.setUserId("testUserId");
+//		user.setUserName("testUserName");
+//		user.setPassword("testPasswd");
+//		user.setSsn("1111112222222");
+//		user.setPhone("111-2222-3333");
+//		user.setAddr("경기도");
+//		user.setEmail("test@test.com");
 		
 		user = userService.getUser("testUserId");
 
@@ -87,18 +81,24 @@ public class UserServiceTest {
 		//System.out.println(user);
 		
 		//==> API 확인
+//		Assert.assertEquals("testUserId", user.getUserId());
+//		Assert.assertEquals("testUserName", user.getUserName());
+//		Assert.assertEquals("testPasswd", user.getPassword());
+//		Assert.assertEquals("111-2222-3333", user.getPhone());
+//		Assert.assertEquals("경기도", user.getAddr());
+//		Assert.assertEquals("test@test.com", user.getEmail());
 		Assert.assertEquals("testUserId", user.getUserId());
-		Assert.assertEquals("testUserName", user.getUserName());
+		Assert.assertEquals("change", user.getUserName());
 		Assert.assertEquals("testPasswd", user.getPassword());
-		Assert.assertEquals("111-2222-3333", user.getPhone());
-		Assert.assertEquals("경기도", user.getAddr());
-		Assert.assertEquals("test@test.com", user.getEmail());
+		Assert.assertEquals("777-7777-7777", user.getPhone());
+		Assert.assertEquals("change", user.getAddr());
+		Assert.assertEquals("change@change.com", user.getEmail());
 
 		Assert.assertNotNull(userService.getUser("user02"));
 		Assert.assertNotNull(userService.getUser("user05"));
 	}
 	
-	//@Test
+	@Test
 	 public void testUpdateUser() throws Exception{
 		 
 		User user = userService.getUser("testUserId");
@@ -129,24 +129,24 @@ public class UserServiceTest {
 		Assert.assertEquals("change@change.com", user.getEmail());
 	 }
 	 
-	//@Test
+	@Test
 	public void testCheckDuplication() throws Exception{
 
 		//==> 필요하다면...
-//			User user = new User();
-//			user.setUserId("testUserId");
-//			user.setUserName("testUserName");
-//			user.setPassword("testPasswd");
-//			user.setSsn("1111112222222");
-//			user.setPhone("111-2222-3333");
-//			user.setAddr("경기도");
-//			user.setEmail("test@test.com");
-//			
-//			userService.addUser(user);
+//		User user = new User();
+//		user.setUserId("testUserId");
+//		user.setUserName("testUserName");
+//		user.setPassword("testPasswd");
+//		user.setSsn("1111112222222");
+//		user.setPhone("111-2222-3333");
+//		user.setAddr("경기도");
+//		user.setEmail("test@test.com");
+//		
+//		userService.addUser(user);
 		
 		//==> console 확인
-		//System.out.println(userService.checkDuplication("testUserId"));
-		//System.out.println(userService.checkDuplication("testUserId"+System.currentTimeMillis()) );
+		System.out.println(userService.checkDuplication("testUserId"));
+		System.out.println(userService.checkDuplication("testUserId"+System.currentTimeMillis()) );
 	 	
 		//==> API 확인
 		Assert.assertFalse( userService.checkDuplication("testUserId") );
@@ -155,7 +155,7 @@ public class UserServiceTest {
 	}
 	
 	 //==>  주석을 풀고 실행하면....
-	 //@Test
+	 @Test
 	 public void testGetUserListAll() throws Exception{
 		 
 	 	Search search = new Search();
@@ -190,7 +190,7 @@ public class UserServiceTest {
 	 	System.out.println(totalCount);
 	 }
 	 
-	 //@Test
+	 @Test
 	 public void testGetUserListByUserId() throws Exception{
 		 
 	 	Search search = new Search();
@@ -225,7 +225,7 @@ public class UserServiceTest {
 	 	System.out.println(totalCount);
 	 }
 	 
-	 //@Test
+	 @Test
 	 public void testGetUserListByUserName() throws Exception{
 		 
 	 	Search search = new Search();
@@ -239,7 +239,7 @@ public class UserServiceTest {
 	 	Assert.assertEquals(3, list.size());
 	 	
 		//==> console 확인
-	 	//System.out.println(list);
+	 	System.out.println(list);
 	 	
 	 	Integer totalCount = (Integer)map.get("totalCount");
 	 	System.out.println(totalCount);
@@ -254,9 +254,13 @@ public class UserServiceTest {
 	 	Assert.assertEquals(0, list.size());
 	 	
 		//==> console 확인
-	 	//System.out.println(list);
+	 	System.out.println(list);
 	 	
 	 	totalCount = (Integer)map.get("totalCount");
 	 	System.out.println(totalCount);
-	 }	 
+	 }
+	 
+	 
+	 
+	 
 }

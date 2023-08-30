@@ -9,12 +9,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.model2.mvc.common.Search;
-import com.model2.mvc.service.domain.User;
 import com.model2.mvc.service.user.UserService;
-import com.model2.mvc.service.user.UserDao;;
+import com.model2.mvc.service.user.UserDao;
+import com.model2.mvc.service.domain.User;
 
-
-//==> 회원관리 서비스 구현
 @Service("userServiceImpl")
 public class UserServiceImpl implements UserService{
 	
@@ -22,6 +20,7 @@ public class UserServiceImpl implements UserService{
 	@Autowired
 	@Qualifier("userDaoImpl")
 	private UserDao userDao;
+	
 	public void setUserDao(UserDao userDao) {
 		this.userDao = userDao;
 	}
@@ -33,14 +32,24 @@ public class UserServiceImpl implements UserService{
 
 	///Method
 	public void addUser(User user) throws Exception {
-		userDao.addUser(user);
+		userDao.insertUser(user);
+	}
+
+	public User loginUser(User user) throws Exception {
+			User dbUser=userDao.findUser(user.getUserId());
+
+			if(! dbUser.getPassword().equals(user.getPassword())){
+				throw new Exception("로그인에 실패했습니다.");
+			}
+			
+			return dbUser;
 	}
 
 	public User getUser(String userId) throws Exception {
-		return userDao.getUser(userId);
+		return userDao.findUser(userId);
 	}
 
-	public Map<String , Object > getUserList(Search search) throws Exception {
+	public Map<String, Object> getUserList(Search search) throws Exception {
 		List<User> list= userDao.getUserList(search);
 		int totalCount = userDao.getTotalCount(search);
 		
@@ -57,7 +66,7 @@ public class UserServiceImpl implements UserService{
 
 	public boolean checkDuplication(String userId) throws Exception {
 		boolean result=true;
-		User user=userDao.getUser(userId);
+		User user=userDao.findUser(userId);
 		if(user != null) {
 			result=false;
 		}
